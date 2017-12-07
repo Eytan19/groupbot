@@ -4,10 +4,11 @@ import datetime
 import unicodecsv
 import json
 
-URL = 'https://api.groupme.com/v3/bots'
+URL = 'https://api.groupme.com/v3/bots/post'
 BOT_ID = '0aafafce1aef34384b7bb45233'
+HEADERS = {'content-type': 'application/json'}
 
-BDAYS_INPUT = 'bdays.csv'
+BDAYS_INPUT = '/Users/eytan/groupbot/bdays.csv'
 
 def bdays(bdays_input, today):
 
@@ -23,14 +24,14 @@ def bdays(bdays_input, today):
 				todays_bdays.append(row)
 
 	for todays_bday in todays_bdays:
-		first_name, last_name = row['First Name'], row['Last Name']
-		params = {
+		first_name, last_name = todays_bday['First Name'], todays_bday['Last Name']
+		data = {
 			'bot_id': BOT_ID,
-			'text': 'Happy Birthday @' + first_name + ' ' + last_name + '!!!'
+			'text': 'Happy birthday @{} {}!!!'.format(first_name, last_name)
 		}
-		status = requests.post(url, parmas=params)
-		print status
-
+		response = requests.post(URL, data=json.dumps(data), headers=HEADERS)
+		print response.content
+	
 
 def main():
 
